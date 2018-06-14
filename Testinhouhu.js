@@ -24,6 +24,37 @@ function readClauses(text) {
     return clauses;
   }
 
-  var text = readEstaPorra("simple1.cnf");
-  var clauses = readClauses(text);
-  console.log(clauses);
+  function readVariables(clauses) {
+    var absoluteClauses = clauses;
+    var existingVariables = [];
+    var variables = [];
+    var existsAlready = false;
+
+      for (i = 0; i < clauses.length; i ++) {
+          for (j = 0; j < clauses[i].length; j++) {
+            absoluteClauses[i][j] = Math.abs(absoluteClauses[i][j]);
+          }
+      }
+
+      for (i = 0; i < clauses.length; i++) {
+          for (j = 0; j < clauses[i].length; j++) {
+            existsAlready = false;
+              for (k = 0; k < existingVariables.length; k++) {
+                  if (absoluteClauses[i][j] == existingVariables[k]) {
+                    existsAlready = true;
+                  }
+              }
+              if (!existsAlready) {
+                existingVariables.push(clauses[i][j]);
+                variables.push(0);
+              }
+          }
+      }
+
+      return variables;
+  }
+
+var text = readEstaPorra("simple2.cnf");
+var clauses = readClauses(text);
+var variables = readVariables(clauses);
+console.log(variables);
