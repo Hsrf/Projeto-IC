@@ -51,14 +51,23 @@ function readFormula(fileName) {
 }
 
 function readClauses(text) {
-  var stringAllClauses = ""
+  var stringAllClauses = "";
   for (i = 0; i < text.length; i++) {
     if (text[i].charAt(0) != "p" && text[i].charAt(0) != "c" && text[i].charAt(0) != "") {
-      stringAllClauses += text[i]
+      stringAllClauses += text[i];
     }
   }
-  var clauses = stringAllClauses.split("0")
-  return clauses
+  var clausesArray = stringAllClauses.split("0");
+  var clauses = [];
+
+  for (i = 0; i < clausesArray.length; i++) {
+     clauses[i] = clausesArray[i].split(" ");
+  } 
+  for (i = 0; i < clauses.length; i++) {
+      clauses[i].pop();
+  }
+  clauses.pop();
+  return clauses;
 }
 
 function readVariables(text) {
