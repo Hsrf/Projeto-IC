@@ -101,5 +101,18 @@ function readVariables(clauses) {
 }
 
 function checkProblemSpecification(text, clauses, variables) {
+  var words = [];
+  for (i = 0; i < text.length; i++) {
+    if (text[i].charAt(0) == "p") {
+      words = text[i].split(" ");
+    }
+  }
+  var amountVariables = words[2];
+  var amountClauses = words[3];
 
+  if (variables.length == amountVariables && clauses.length == amountClauses) {
+    return true;
+  } else {
+    return false;
+  }
 }
