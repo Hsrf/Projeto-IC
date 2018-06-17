@@ -31,7 +31,11 @@ function readClauses(text) {
           for (j = 0; j < clauses[i].length; j++) {  existsAlready = false;
               for (k = 0; k < existingVariables.length; k++) {
                   if (absoluteClauses[i][j] == existingVariables[k]) {    existsAlready = true;  } }
-              if (!existsAlready) {   existingVariables.push(clauses[i][j]); variables.push(0); }}} return variables;}
+              if (!existsAlready) {   existingVariables.push(clauses[i][j]); variables.push(0); }}} 
+
+              return variables;
+
+            }
 
 function checkProblemSpecification(text, clauses, variables) {
     var words = [];
@@ -50,8 +54,104 @@ function checkProblemSpecification(text, clauses, variables) {
     }
   }
 
-var text = readEstaPorra("simple2.cnf");
+
+  function nextAssignment(variables){
+    var oldBinary = "";
+    for(i = 0; i < variables.length; i ++){
+      oldBinary += variables[i];
+    }
+
+    var oldDecimal = convertToDecimal(oldBinary);
+    var newDecimal = oldDecimal + 1;
+    var newBinary = convertToBinary(newDecimal);
+
+    aux = variables.length - newBinary.length;
+    for(j = 0; j < aux; j++){
+        newBinary = "0" + newBinary;
+    }
+    for(i = 0 ; i < variables.length; i++){
+      variables[i] = newBinary.charAt(i);
+     
+    }
+  
+    return variables;
+  }
+
+  function convertToBinary(numberD){
+    var result = '';
+    while(numberD > 0){
+      result = (numberD % 2) + result;
+      numberD = numberD / 2;
+      numberD = numberD.toString();
+      numberD = parseInt(numberD);
+    }
+    if(numberD != 0){
+    result = numberD + result;
+    }
+    return result;
+  }
+
+  function convertToDecimal(numberB){
+   //ESSA FUNCAO TEM QUE SER CHAMADA COM STRING OU VAI DAR MERDA
+    result = 0;
+    var power = 0;
+    for(i = numberB.length - 1; i >= 0; i--){
+      result += numberB.charAt(i) * Math.pow(2, power);
+      power++;
+    }
+    return result;
+  }
+
+
+
+
+  function doSolve(variables, clauses){
+    var respostaDaVida = false;
+    var finalTry = [];
+    for(g = 0; g < variables.length; g++){
+       finalTry[g] = "1";
+    }
+
+    var unSat = false;
+    for(i = 0; i < clauses.length && !unSat; i++){
+        var trueClause = false;
+        for(j = 0; j < clauses[i].length && !trueClause ; j ++){
+           if(parseInt(clauses[i][j]) > 0 && parseInt(variables[clauses[i] - 1]) == 1){
+            console.log("Clausula " + i + " deu certo");
+            trueClause = true;
+            }else if(parseInt(clauses[i][j]) < 0 && parseInt(variables[clauses[i] - 1]) == 0){
+            console.log("Clausula " + i + " deu certo");
+            trueClause = true;
+        }
+      }
+      if(!trueClause){
+        if(variables != finalTry){
+        return doSolve(nextAssignment(variables), clauses) || unSat;
+        }else{
+          respostaDaVida = false;
+          unSat = true;
+          return respostaDaVida;
+        }
+      }
+    }
+    if(trueClause){
+      respostaDaVida = true;
+      return respostaDaVida;
+    }
+}
+      
+    
+  
+
+var text = readEstaPorra("simple0.cnf");
 var clauses = readClauses(text);
 var variables = readVariables(clauses);
 var check = checkProblemSpecification(text, clauses, variables);
-console.log(check);
+var buceta;
+for(buceta = 0; buceta < 16; buceta++){
+var nextTry = nextAssignment(variables);
+console.log(nextTry);
+}
+//var pf = doSolve(variables, clauses);
+//console.log(pf);
+var x = 0;

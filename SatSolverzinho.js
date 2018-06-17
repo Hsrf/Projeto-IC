@@ -96,6 +96,10 @@ function readVariables(clauses) {
             }
         }
     }
+    var finalTry = [];
+    for(g = 0; g < variables.length; g++){
+     finalTry[g] = 1;
+    }
 
     return variables;
 }
@@ -115,4 +119,51 @@ function checkProblemSpecification(text, clauses, variables) {
   } else {
     return false;
   }
+}
+
+function nextAssignment(variables){
+  var oldBinary = "";
+  for(i = 0; i < variables.length; i ++){
+    oldBinary += variables[i];
+  }
+
+  var oldDecimal = convertToDecimal(oldBinary);
+  var newDecimal = oldDecimal + 1;
+  var newBinary = convertToBinary(newDecimal);
+
+  aux = variables.length - newBinary.length;
+  for(j = 0; j < aux; j++){
+      newBinary = "0" + newBinary;
+  }
+  for(i = 0 ; i < variables.length; i++){
+    variables[i] = newBinary.charAt(i);
+   
+  }
+
+  return variables;
+}
+
+function convertToBinary(numberD){
+  var result = '';
+  while(numberD > 0){
+    result = (numberD % 2) + result;
+    numberD = numberD / 2;
+    numberD = numberD.toString();
+    numberD = parseInt(numberD);
+  }
+  if(numberD != 0){
+  result = numberD + result;
+  }
+  return result;
+}
+
+function convertToDecimal(numberB){
+ //ESSA FUNCAO TEM QUE SER CHAMADA COM STRING OU VAI DAR MERDA
+  result = 0;
+  var power = 0;
+  for(i = numberB.length - 1; i >= 0; i--){
+    result += numberB.charAt(i) * Math.pow(2, power);
+    power++;
+  }
+  return result;
 }
