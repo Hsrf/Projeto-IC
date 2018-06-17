@@ -8,17 +8,17 @@ function readClauses(text) {
     var stringAllClauses = "";
     for (i = 0; i < text.length; i++) {
       if (text[i].charAt(0) != "p" && text[i].charAt(0) != "c" && text[i].charAt(0) != "") {
-        stringAllClauses += text[i];
+        stringAllClauses += " " + text[i];
       }
     }
-    var clausesArray = stringAllClauses.split("0");
+    var clausesArray = stringAllClauses.split(" 0");
     var clauses = [];
 
     for (i = 0; i < clausesArray.length; i++) {
        clauses[i] = clausesArray[i].split(" ");
     } 
     for (i = 0; i < clauses.length; i++) {
-        clauses[i].pop();
+        clauses[i].shift();
     }
     clauses.pop();
     return clauses;
@@ -166,7 +166,6 @@ function checkProblemSpecification(text, clauses, variables) {
     for(i = 0; i < clauses.length && !isSat; i++){
       var trueClause = false;
         for(j = 0; j < clauses[i].length && !trueClause ; j ++){
-            console.log(variables[(Math.abs(parseInt(clauses[i][j])) - 1)])
            if(parseInt(clauses[i][j]) > 0 && variables[(Math.abs(parseInt(clauses[i][j])) - 1)] == 1){
             trueClause = true;
             }else if(parseInt(clauses[i][j]) < 0 && variables[(Math.abs(parseInt(clauses[i][j])) - 1)] == 0){
@@ -178,14 +177,13 @@ function checkProblemSpecification(text, clauses, variables) {
         return doSolve(nextAssignment(variables), clauses);
         }else{
           isSat = false;
-          console.log(null);
           return isSat;
         }
       }
     }
     if(trueClause){
       isSat = true;
-      console.log(variables)
+      console.log(variables);
       return isSat;
     }
 }
@@ -193,10 +191,9 @@ function checkProblemSpecification(text, clauses, variables) {
     
   
 
-var text = readEstaPorra("simple0.cnf");
+var text = readEstaPorra("tutorial.cnf");
 var clauses = readClauses(text);
-console.log(clauses);
 var variables = readVariables(clauses);
-console.log(variables);
 var check = checkProblemSpecification(text, clauses, variables);
+console.log(check);
 console.log(doSolve(variables,clauses));
