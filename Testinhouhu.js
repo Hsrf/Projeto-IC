@@ -24,18 +24,70 @@ function readClauses(text) {
     return clauses;
   }
 
-  function readVariables(clauses) { var absoluteClauses = clauses, existingVariables = [], variables = [], existsAlready = false;
+  function readVariables(clauses) {
+    var absoluteClauses = [];
+    var existingVariables = [];
+    var variables = [];
+    var existsAlready = false;
+ 
    for (i = 0; i < clauses.length; i ++) {
-          for (j = 0; j < clauses[i].length; j++) { absoluteClauses[i][j] = Math.abs(absoluteClauses[i][j]);}}
+     absoluteClauses[i] = [];
+          for (j = 0; j < clauses[i].length; j++) {
+             absoluteClauses[i][j] = Math.abs(clauses[i][j]);
+            }
+          }
+ 
       for (i = 0; i < clauses.length; i++) {
-          for (j = 0; j < clauses[i].length; j++) {  existsAlready = false;
+          for (j = 0; j < clauses[i].length; j++) {
+              existsAlready = false;
               for (k = 0; k < existingVariables.length; k++) {
-                  if (absoluteClauses[i][j] == existingVariables[k]) {    existsAlready = true;  } }
-              if (!existsAlready) {   existingVariables.push(clauses[i][j]); variables.push(0); }}} 
+                  if (absoluteClauses[i][j] == existingVariables[k]) {
+                        existsAlready = true;  
+                   }
+              }
+              if (!existsAlready) {
+                  existingVariables.push(absoluteClauses[i][j]);
+                  variables.push(0);
+                }
+              }
+            }
+ 
+              return variables;
+ 
+     }
+
+  function readVariables(clauses) { 
+    var absoluteClauses = [];
+    var existingVariables = [];
+    var variables = [];
+    var existsAlready = false;
+
+   for (i = 0; i < clauses.length; i ++) {
+     absoluteClauses[i] = [];
+          for (j = 0; j < clauses[i].length; j++) {
+             absoluteClauses[i][j] = Math.abs(clauses[i][j]);
+            }
+          }
+
+      for (i = 0; i < clauses.length; i++) {
+          for (j = 0; j < clauses[i].length; j++) {
+              existsAlready = false;
+              for (k = 0; k < existingVariables.length; k++) {
+                  if (absoluteClauses[i][j] == existingVariables[k]) {
+                        existsAlready = true;  
+                   }
+              }
+              if (!existsAlready) {
+                  existingVariables.push(absoluteClauses[i][j]);
+                  variables.push(0);
+                }
+              }
+            } 
 
               return variables;
 
-            }
+     }
+
 
 function checkProblemSpecification(text, clauses, variables) {
     var words = [];
@@ -63,18 +115,21 @@ function checkProblemSpecification(text, clauses, variables) {
 
     var oldDecimal = convertToDecimal(oldBinary);
     var newDecimal = oldDecimal + 1;
-    var newBinary = convertToBinary(newDecimal);
-
-    aux = variables.length - newBinary.length;
-    for(j = 0; j < aux; j++){
-        newBinary = "0" + newBinary;
-    }
-    for(i = 0 ; i < variables.length; i++){
-      variables[i] = newBinary.charAt(i);
-     
-    }
   
-    return variables;
+    if (newDecimal == Math.pow(2,variables.length)) {
+      return ["x"];
+    }
+    else {
+      var newBinary = convertToBinary(newDecimal);
+      aux = variables.length - newBinary.length;
+      for(j = 0; j < aux; j++){
+         newBinary = "0" + newBinary;
+     }
+      for(i = 0 ; i < variables.length; i++){
+        variables[i] = newBinary.charAt(i);
+     }
+     return variables;
+   }
   }
 
   function convertToBinary(numberD){
@@ -107,11 +162,6 @@ function checkProblemSpecification(text, clauses, variables) {
 
   function doSolve(variables, clauses){
     var respostaDaVida = false;
-    var finalTry = [];
-    for(g = 0; g < variables.length; g++){
-       finalTry[g] = "1";
-    }
-
     var unSat = false;
     for(i = 0; i < clauses.length && !unSat; i++){
         var trueClause = false;
@@ -125,12 +175,12 @@ function checkProblemSpecification(text, clauses, variables) {
         }
       }
       if(!trueClause){
-        if(variables != finalTry){
-        return doSolve(nextAssignment(variables), clauses) || unSat;
+        if(variables[0] != "x"){
+        return doSolve(nextAssignment(variables), clauses);
         }else{
           respostaDaVida = false;
           unSat = true;
-          return respostaDaVida;
+          return unSat;
         }
       }
     }
@@ -147,11 +197,5 @@ var text = readEstaPorra("simple0.cnf");
 var clauses = readClauses(text);
 var variables = readVariables(clauses);
 var check = checkProblemSpecification(text, clauses, variables);
-var buceta;
-for(buceta = 0; buceta < 16; buceta++){
-var nextTry = nextAssignment(variables);
-console.log(nextTry);
-}
-//var pf = doSolve(variables, clauses);
-//console.log(pf);
-var x = 0;
+
+console.log(doSolve(variables,clauses));
