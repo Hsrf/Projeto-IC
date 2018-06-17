@@ -162,15 +162,14 @@ function checkProblemSpecification(text, clauses, variables) {
 
   function doSolve(variables, clauses){
     var respostaDaVida = false;
-    var unSat = false;
-    for(i = 0; i < clauses.length && !unSat; i++){
-        var trueClause = false;
+    var isSat = false;
+    for(i = 0; i < clauses.length && !isSat; i++){
+      var trueClause = false;
         for(j = 0; j < clauses[i].length && !trueClause ; j ++){
-           if(parseInt(clauses[i][j]) > 0 && parseInt(variables[clauses[i] - 1]) == 1){
-            console.log("Clausula " + i + " deu certo");
+            console.log(variables[(Math.abs(parseInt(clauses[i][j])) - 1)])
+           if(parseInt(clauses[i][j]) > 0 && variables[(Math.abs(parseInt(clauses[i][j])) - 1)] == 1){
             trueClause = true;
-            }else if(parseInt(clauses[i][j]) < 0 && parseInt(variables[clauses[i] - 1]) == 0){
-            console.log("Clausula " + i + " deu certo");
+            }else if(parseInt(clauses[i][j]) < 0 && variables[(Math.abs(parseInt(clauses[i][j])) - 1)] == 0){
             trueClause = true;
         }
       }
@@ -178,24 +177,26 @@ function checkProblemSpecification(text, clauses, variables) {
         if(variables[0] != "x"){
         return doSolve(nextAssignment(variables), clauses);
         }else{
-          respostaDaVida = false;
-          unSat = true;
-          return unSat;
+          isSat = false;
+          console.log(null);
+          return isSat;
         }
       }
     }
     if(trueClause){
-      respostaDaVida = true;
-      return respostaDaVida;
+      isSat = true;
+      console.log(variables)
+      return isSat;
     }
 }
-      
+  
     
   
 
 var text = readEstaPorra("simple0.cnf");
 var clauses = readClauses(text);
+console.log(clauses);
 var variables = readVariables(clauses);
+console.log(variables);
 var check = checkProblemSpecification(text, clauses, variables);
-
 console.log(doSolve(variables,clauses));
