@@ -1,6 +1,15 @@
+exports.solve = function(fileName){
+  var text = readFormula(fileName);
+  var clauses = readClauses(text);
+  var variables = readVariables(clauses);
+  var check = checkProblemSpecification(text, clauses, variables);
+return doSolve(variables,clauses);
+}
+
+
 var fs = require('fs');
 
-function readEstaPorra(fileName) {
+function readFormula(fileName) {
     var text = fs.readFileSync(fileName).toString().split('\n');
     return text;
 }
@@ -116,7 +125,6 @@ function checkProblemSpecification(text, clauses, variables) {
   }
 
   function convertToDecimal(numberB){
-   //ESSA FUNCAO TEM QUE SER CHAMADA COM STRING OU VAI DAR MERDA
     result = 0;
     var power = 0;
     for(i = numberB.length - 1; i >= 0; i--){
@@ -126,9 +134,7 @@ function checkProblemSpecification(text, clauses, variables) {
     return result;
   }
 
-
-
-
+  
   function doSolve(variables, clauses){
     let isSat = false
     while ((!isSat) && variables[0] != "x") {
@@ -159,15 +165,3 @@ function checkProblemSpecification(text, clauses, variables) {
     return result
   }
   
-    
-  
-
-var text = readEstaPorra("hole5.cnf");
-var clauses = readClauses(text);
-var variables = readVariables(clauses);
-//console.log(clauses);
-//console.log(variables);
-var check = checkProblemSpecification(text, clauses, variables);
-//console.log(check);
-console.log(doSolve(variables,clauses));
-//console.log(check);
